@@ -1,0 +1,79 @@
+---
+description: AgentGOD 上下文检查点与状态管理协议。当项目中使用 AgentGOD Agent 系统时，本规则定义跨上下文的状态持久化、检查点触发和续接机制。
+globs:
+  - "workflows/state/**"
+  - "workflows/project-knowledge.md"
+---
+
+# AgentGOD 上下文检查点协议
+
+## 状态文件格式
+
+所有工作流状态文件位于 `workflows/state/`，采用 Markdown + YAML frontmatter：
+
+```yaml
+---
+workflow_id: string        # 格式: {描述}-{YYYYMMDD-HHmmss}
+status: string             # in_progress | waiting_for_input | completed | failed
+created_at: ISO-8601
+updated_at: ISO-8601
+current_phase: string      # 当前执行阶段
+assigned_agents: [string]  # 参与的 Agent 列表
+---
+```
+
+## 检查点触发条件
+
+子 Agent 应在以下情况保存检查点并返回 `## CHECKPOINT`：
+
+1. **阶段边界**：一个明确的子步骤完成，即将进入下一步
+2. **输出量大**：已生成的内容超过预估的 60%
+3. **长迭代**：已执行超过 8 轮工具调用
+4. **外部依赖阻塞**：等待某个外部操作完成
+
+## CHECKPOINT 返回格式
+
+```markdown
+## CHECKPOINT
+
+### 已完成
+（当前步骤的完整输出）
+
+### 待继续
+（下一步的具体任务描述）
+
+### 关键上下文
+（续接时必须的变量、文件路径、决策记录）
+```
+
+## 续接协议
+
+指挥官检测到 CHECKPOINT 后：
+
+1. 将 CHECKPOINT 内容追加到对应的 state 文件
+2. 更新 state 文件的 `updated_at` 和 `current_phase`
+3. 发起新 Task，prompt 结构：
+
+```
+你是 {Agent.name}，继续之前的工作。
+
+请先读取状态文件：{state_file_path}
+找到最后一个 CHECKPOINT，从"待继续"部分开始执行。
+
+## 当前子任务
+{原始子任务描述}
+```
+
+## NEEDS_INPUT 状态
+
+当子 Agent 返回 `## NEEDS_INPUT` 时：
+
+1. state 文件的 status 更新为 `waiting_for_input`
+2. 暂存状态写入 state 文件
+3. 用户回答后 status 恢复为 `in_progress`
+
+## 状态清理
+
+- 完成的工作流：state 文件保留，status 标记为 `completed`
+- 失败的工作流：state 文件保留，status 标记为 `failed`，附带错误信息
+- 建议在 `.gitignore` 中添加 `workflows/state/` 避免提交运行时状态

@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+._*
+
+# Editor / IDE
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Cursor plans and runtime
+.cursor/plans/
+
+# Runtime state (generated per-project, not part of the repo)
+workflows/state/
+workflows/project-knowledge.md
+workflows/.pending-takeover
+
+# Test artifacts
+/tmp/

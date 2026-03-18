@@ -1,0 +1,69 @@
+---
+description: "AgentGOD project conventions for designing and implementing multi-agent systems. Enforces naming standards, design-first workflow, file organization, and safety practices."
+alwaysApply: true
+---
+
+# AgentGOD Agent System Conventions
+
+## Design-First Principle
+
+Never implement an agent before its design document exists. Follow this order:
+
+1. Create a system design doc (use `~/.cursor/skills/agent-system-architect/templates/system-design-doc.md`)
+2. Create an agent spec for each agent (use `~/.cursor/skills/agent-system-architect/templates/agent-spec.md`)
+3. Review design against anti-patterns (`~/.cursor/skills/agent-system-architect/references/anti-patterns.md`)
+4. Only then proceed to implementation
+
+## Agent Naming
+
+- Agent identifiers: lowercase, hyphens only, 3-50 characters (e.g., `code-reviewer`, `research-scout`)
+- Skill directories: match agent identifier exactly
+- Rule files: `<agent-name>.mdc` or `<concern-name>.mdc`
+- MCP config keys: match the service name, not the agent name
+
+## File Organization
+
+```
+AgentGOD/
+├── .cursor/
+│   └── rules/           # Project-level rules (always-apply conventions)
+├── designs/             # System design documents
+│   ├── system-design.md # Overall architecture
+│   └── agent-specs/     # Individual agent specifications
+├── agents/              # Agent implementation files
+├── skills/              # Project-specific skills (if needed)
+└── tests/               # Integration and end-to-end tests
+```
+
+## Agent Design Constraints
+
+- Each agent's system prompt must be under 800 words
+- Each agent may use at most 8 tools
+- Each agent connects to at most 3 MCP servers
+- Every destructive operation (file write, API POST/PUT/DELETE, database mutation) requires either:
+  - An explicit human approval gate, OR
+  - Documented justification for why autonomous execution is safe
+
+## MCP Security
+
+- API keys go in environment variables, never in committed files
+- Use project-scope MCP config (`.mcp.json`) for project-specific servers
+- Use global config (`~/.cursor/mcp.json`) only for universally needed servers
+- Document which MCP servers each agent uses and why in the agent spec
+
+## Communication Standards
+
+- All agent-to-agent messages must include: `task_id`, `source_agent`, `timestamp`
+- Define timeout and retry policy for every communication path
+- Implement circuit breakers for external API dependencies
+- Set max iteration limits for any evaluator-optimizer loops (default: 5)
+
+## Quality Gates
+
+Before declaring an agent system "ready":
+- [ ] All agents have specs in `designs/agent-specs/`
+- [ ] System design document exists and is current
+- [ ] Anti-pattern checklist has been reviewed
+- [ ] Each agent has at least 2 test cases
+- [ ] End-to-end workflow tested with realistic input
+- [ ] MCP token budget verified (total context consumption documented)
