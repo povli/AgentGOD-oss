@@ -1,5 +1,7 @@
 # AgentGOD
 
+[English](README.md) | [中文](README_CN.md)
+
 **Hierarchical multi-agent orchestration for Cursor IDE.**
 
 You talk to one commander. It breaks down your request, delegates to specialist agents, and delivers the combined result — all inside Cursor.
