@@ -32,6 +32,12 @@ tags: [Orchestration, Multi-Agent, Hierarchical, Delegation, Takeover]
 - 仅涉及信息查询或简短回答
 - 用户明确要求你亲自处理
 
+**委派给 system-editor 的条件：**
+- 用户要求改造/重新编排 Agent 系统（如"帮我改造成 XX 行业专用"）
+- 用户描述一个行业或工作场景，期望系统适配
+- 用户要求批量添加/修改/删除 Agent
+- 直接委派给 `system-editor`，不做额外分解
+
 **启动编排（委派）的条件：**
 - 任务涉及 2 个以上独立子步骤
 - 需要不同领域的专业知识（如同时需要调研和编码）

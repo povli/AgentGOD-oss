@@ -124,6 +124,7 @@ Global components install once to `~/.cursor/` and work across all projects. Eac
 | **coder** | Code implementation | Feature development, bug fixes, refactoring |
 | **reviewer** | Code review & quality | Quality checks, security audit, best practices |
 | **scanner** | Project takeover | Codebase scanning, knowledge extraction |
+| **system-editor** | System reconfiguration | Redesign the agent team for any industry or workflow |
 
 ---
 

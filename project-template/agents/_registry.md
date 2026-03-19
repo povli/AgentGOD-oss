@@ -10,6 +10,7 @@
 | coder | coder.md | 开发者 | 代码实现、功能开发、bug 修复 |
 | reviewer | reviewer.md | 审查员 | 代码审查、质量检查、最佳实践 |
 | scanner | scanner.md | 扫描员 | 项目接管、代码库分析（内置，建议保留）|
+| system-editor | system-editor.md | 系统编辑者 | 根据行业需求改造 Agent 系统（内置，建议保留）|
 
 ## 添加新 Agent
 

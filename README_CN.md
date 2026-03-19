@@ -124,6 +124,7 @@ can_ask_user: true
 | **coder** | 代码实现 | 功能开发、Bug 修复、重构 |
 | **reviewer** | 代码审查与质量 | 质量检查、安全审查、规范验证 |
 | **scanner** | 项目接管 | 代码库扫描、知识提取 |
+| **system-editor** | 系统改造 | 根据行业需求重新编排 Agent 团队 |
 
 ---
 
